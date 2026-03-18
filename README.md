@@ -1,3 +1,58 @@
+# Rajneesh Kumar — Portfolio
+
+Production-grade personal portfolio built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **Framer Motion**, and **shadcn/ui**.
+
+## Tech
+
+- Next.js 14 (App Router)
+- Tailwind CSS
+- Framer Motion
+- shadcn/ui
+- Lucide React + React Icons
+- Nodemailer (contact form API)
+
+## Getting started
+
+```bash
+cd portfolio
+npm install
+npm run dev
+```
+
+## Assets
+
+Place these in `public/`:
+
+- `Rajneesh.png`
+- `RajneeshKumar_SoftwareEngineer.pdf`
+
+## Contact form (SMTP)
+
+1. Copy env file:
+
+```bash
+copy .env.example .env.local
+```
+
+2. Fill in SMTP variables in `.env.local`:
+
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `SMTP_PASS`
+
+Optional:
+
+- `CONTACT_TO` (defaults to `personalInfo.email`)
+- `CONTACT_FROM` (defaults to `SMTP_USER`)
+
+## Production build
+
+```bash
+npm run build
+npm run start
+```
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
