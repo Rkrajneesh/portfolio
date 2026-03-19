@@ -7,8 +7,9 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { copy, personalInfo } from "@/lib/data";
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 
 const fadeIn = {
   hidden: { opacity: 0 },
@@ -44,8 +45,11 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
-      <SectionHeading title={copy.sections.contact.title} subtitle={copy.sections.contact.subtitle} />
+    <SectionWrapper id="contact">
+      <SectionHeading
+        title="Contact"
+        subtitle="Open to backend engineering roles and collaborations. Let's connect."
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <motion.div
@@ -56,26 +60,26 @@ export function Contact() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6"
         >
-          <p className="text-sm leading-6 text-[var(--text-muted)]">
+          <p className="text-sm text-slate-400 leading-relaxed">
             {personalInfo.title} • {personalInfo.location}
           </p>
 
           <div className="mt-6 space-y-3">
             <Link
               href={`mailto:${personalInfo.email}`}
-              className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-[var(--text)] hover:bg-white/5"
+              className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-slate-400 hover:bg-white/5"
             >
               <Mail className="h-4 w-4 text-[var(--accent)]" />
               <span>{personalInfo.email}</span>
             </Link>
             <Link
               href={`tel:${personalInfo.phone.replace(/\s+/g, "")}`}
-              className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-[var(--text)] hover:bg-white/5"
+              className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-slate-400 hover:bg-white/5"
             >
               <Phone className="h-4 w-4 text-[var(--accent)]" />
               <span>{personalInfo.phone}</span>
             </Link>
-            <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-[var(--text)]">
+            <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-black/10 px-4 py-3 text-sm text-slate-400">
               <MapPin className="h-4 w-4 text-[var(--accent)]" />
               <span>{personalInfo.location}</span>
             </div>
@@ -119,7 +123,7 @@ export function Contact() {
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="text-sm text-[var(--text-muted)]" htmlFor="name">
+                <label className="text-sm text-slate-400" htmlFor="name">
                   {copy.sections.contact.form.nameLabel}
                 </label>
                 <Input
@@ -131,7 +135,7 @@ export function Contact() {
                 />
               </div>
               <div>
-                <label className="text-sm text-[var(--text-muted)]" htmlFor="email">
+                <label className="text-sm text-slate-400" htmlFor="email">
                   {copy.sections.contact.form.emailLabel}
                 </label>
                 <Input
@@ -145,7 +149,7 @@ export function Contact() {
               </div>
             </div>
             <div>
-              <label className="text-sm text-[var(--text-muted)]" htmlFor="message">
+              <label className="text-sm text-slate-400" htmlFor="message">
                 {copy.sections.contact.form.messageLabel}
               </label>
               <Textarea
@@ -164,7 +168,6 @@ export function Contact() {
           </form>
         </motion.div>
       </div>
-    </section>
+    </SectionWrapper>
   );
 }
-

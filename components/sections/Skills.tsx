@@ -1,10 +1,11 @@
 "use client";
 
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import SectionHeading from "@/components/ui/SectionHeading";
 import { SkillCard } from "@/components/ui/SkillCard";
 import { copy, skills, techStack } from "@/lib/data";
 import { SiDocker, SiOpenjdk, SiSpringboot } from "react-icons/si";
 import { DiAws } from "react-icons/di";
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 
 const iconByKey = {
   java: SiOpenjdk,
@@ -15,8 +16,11 @@ const iconByKey = {
 
 export function Skills() {
   return (
-    <section id="skills" className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
-      <SectionHeading title={copy.sections.skills.title} subtitle={copy.sections.skills.subtitle} />
+    <SectionWrapper id="skills">
+      <SectionHeading
+        title="Skills"
+        subtitle="A focused backend-heavy toolset with cloud and frontend capability when needed."
+      />
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
         {techStack.map((t) => {
@@ -24,7 +28,7 @@ export function Skills() {
           return (
             <div
               key={t.key}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm text-[var(--text-muted)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm text-slate-400"
             >
               <Icon className="h-4 w-4 text-[var(--text)]" aria-hidden="true" />
               <span>{t.label}</span>
@@ -38,6 +42,6 @@ export function Skills() {
           <SkillCard key={s.category} skill={s} />
         ))}
       </div>
-    </section>
+    </SectionWrapper>
   );
 }

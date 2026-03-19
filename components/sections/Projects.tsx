@@ -1,147 +1,204 @@
-"use client";
+'use client'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Database, MessageSquare, MessageCircle, Activity,
+  CreditCard, Github, ExternalLink, Building2, LucideIcon
+} from 'lucide-react'
+import { SectionWrapper } from '@/components/ui/SectionWrapper'
+import SectionHeading from '@/components/ui/SectionHeading'
 
-import Link from "next/link";
-import { motion, useReducedMotion, Variants } from "framer-motion";
-import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { copy, personalInfo, projects } from "@/lib/data";
+interface ProjectData {
+  id: number;
+  name: string;
+  company: string;
+  description: string;
+  tags: string[];
+  accentColor: string;
+  Icon: LucideIcon;
+  featured: boolean;
+  filter: string;
+}
+
+const projects: ProjectData[] = [
+  {
+    id: 1,
+    name: 'High-Volume Data Pipeline',
+    company: 'Infinite Computer Solutions',
+    description: 'Batch processing pipeline ingesting 50K-100K+ records with optimised MySQL/PostgreSQL query strategies, significantly reducing processing latency at enterprise scale.',
+    tags: ['Java', 'Spring Batch', 'MySQL', 'PostgreSQL'],
+    accentColor: '#fb923c',
+    Icon: Database,
+    featured: true,
+    filter: 'Backend',
+  },
+  {
+    id: 2,
+    name: 'Real-Time Messaging System',
+    company: 'GigVistas',
+    description: 'Distributed real-time messaging platform and async notification service using WebSocket, STOMP, and event-driven architecture with AWS SQS and SES pipelines.',
+    tags: ['WebSocket', 'STOMP', 'AWS SQS', 'AWS SES', 'Spring Boot'],
+    accentColor: '#a78bfa',
+    Icon: MessageSquare,
+    featured: true,
+    filter: 'Real-Time',
+  },
+  {
+    id: 3,
+    name: 'WhatsApp Notification Automation',
+    company: 'Infinite Computer Solutions',
+    description: 'End-to-end automation parsing large CSV datasets and delivering targeted WhatsApp notifications via external API integration at enterprise scale.',
+    tags: ['Spring Batch', 'REST APIs', 'CSV Processing', 'Java'],
+    accentColor: '#2dd4bf',
+    Icon: MessageCircle,
+    featured: true,
+    filter: 'Backend',
+  },
+  {
+    id: 4,
+    name: 'URL Monitoring & Alerting System',
+    company: 'Infinite Computer Solutions',
+    description: 'URL monitoring using scheduled tasks and automated email notifications via AWS SES, improving service uptime visibility and operational reliability.',
+    tags: ['Spring Boot', 'Scheduler', 'AWS SES', 'MySQL'],
+    accentColor: '#facc15',
+    Icon: Activity,
+    featured: false,
+    filter: 'DevOps',
+  },
+  {
+    id: 5,
+    name: 'Payment Gateway Integration',
+    company: 'Infinite Computer Solutions',
+    description: 'Secure payment gateway with PCI-compliant data flows, Spring Security hardening, and seamless digital transaction handling across the platform.',
+    tags: ['Java', 'Spring Security', 'PostgreSQL', 'Spring Boot'],
+    accentColor: '#f472b6',
+    Icon: CreditCard,
+    featured: false,
+    filter: 'Security',
+  },
+]
 
 export function Projects() {
-  const shouldReduceMotion = useReducedMotion();
-  const sorted = [...projects].sort((a, b) => Number(b.featured) - Number(a.featured));
+  const [activeFilter, setActiveFilter] = useState('All')
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const cardVariants: Variants = {
-    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { duration: 0.6, ease: "easeOut" } 
-    },
-  };
+  const filteredProjects = activeFilter === 'All'
+    ? projects
+    : projects.filter((p) => p.filter === activeFilter)
 
   return (
-    <section id="projects" className="relative w-full py-24 overflow-hidden">
-      {/* Background Gradients */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-0 w-[500px] h-[500px] opacity-20 [background:radial-gradient(circle_at_center,rgba(6,182,212,0.4),transparent_70%)]" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] opacity-20 [background:radial-gradient(circle_at_center,rgba(37,99,235,0.4),transparent_70%)]" />
-      </div>
+    <SectionWrapper id="projects">
 
-      <div className="mx-auto max-w-7xl px-6 relative z-10">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={cardVariants}
-          className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-16"
-        >
-          <div>
-            <h2 className="text-sm font-semibold text-cyan-400 tracking-wider uppercase mb-3">{copy.sections.projects.title}</h2>
-            <h3 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Featured <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Work</span>
-            </h3>
-            <p className="text-[var(--text-muted)] max-w-2xl text-lg">
-              {copy.sections.projects.subtitle}
-            </p>
-          </div>
+      <SectionHeading
+        title="Projects"
+        subtitle="A focused showcase of backend systems and distributed architecture projects built at scale."
+      />
 
-          <Link
-            href={personalInfo.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "gap-2 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 shrink-0")}
+      {/* FILTER PILLS — identical to Skills top pills */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        {['All','Backend','Real-Time','DevOps','Security'].map((f) => (
+          <button
+            key={f}
+            onClick={() => setActiveFilter(f)}
+            className={`px-4 py-1.5 rounded-full text-sm
+              border transition-all duration-200 flex items-center gap-2
+              ${activeFilter === f
+                ? 'border-cyan-400/40 text-cyan-400 bg-cyan-400/8'
+                : 'border-white/10 text-slate-400 bg-white/3 hover:text-white hover:border-white/20'
+              }`}
           >
-            {copy.sections.projects.viewAll}
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </motion.div>
-
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-        >
-          {sorted.map((project) => (
-            <motion.div key={project.title} variants={cardVariants} className="group relative h-full">
-              
-              {/* Animated Card Hover Glow */}
-              <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 blur transition duration-500 group-hover:opacity-25" />
-
-              {/* Card Container */}
-              <div className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-[var(--surface)]/80 backdrop-blur-xl border border-[var(--border)] shadow-2xl transition-colors hover:border-white/20 p-6 lg:p-8">
-                
-                <div className="flex flex-1 flex-col">
-                  <div className="flex items-start justify-between mb-4 gap-4">
-                    <h4 className="text-2xl font-bold text-[var(--text)] group-hover:text-cyan-400 transition-colors">
-                      {project.title}
-                    </h4>
-                    {project.featured && (
-                      <span className="shrink-0 px-3 py-1 text-[10px] uppercase tracking-wider font-bold text-blue-300 bg-blue-500/20 rounded-full border border-blue-500/30">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-[var(--text-muted)] leading-relaxed mb-8 flex-1">
-                    {project.description}
-                  </p>
-
-                  {/* Tech Stack Pills */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {project.tags.map((tech) => (
-                      <span 
-                        key={tech} 
-                        className="px-3 py-1 text-xs font-medium text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 rounded-full"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Links */}
-                  <div className="flex items-center gap-6 mt-auto border-t border-[var(--border)] pt-6">
-                    {project.github && project.github !== "" && (
-                      <a 
-                        href={project.github} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm font-medium text-[var(--text-muted)] hover:text-cyan-400 transition-colors"
-                      >
-                        <Github className="w-5 h-5" />
-                        {copy.sections.projects.card.githubLabel}
-                      </a>
-                    )}
-                    {project.demo && project.demo !== "" && (
-                      <a 
-                        href={project.demo} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm font-medium text-[var(--text-muted)] hover:text-blue-400 transition-colors"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                        {copy.sections.projects.card.demoLabel}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            {f}
+          </button>
+        ))}
       </div>
-    </section>
-  );
+
+      {/* GRID — 3 cols with gap-4 */}
+      <motion.div
+        variants={{
+          hidden: {},
+          show: { transition: { staggerChildren: 0.15 } }
+        }}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-60px' }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
+        <AnimatePresence mode="popLayout">
+          {filteredProjects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </AnimatePresence>
+      </motion.div>
+
+    </SectionWrapper>
+  )
+}
+
+function ProjectCard({ project }: { project: ProjectData }) {
+  return (
+    <motion.div
+      layout
+      exit={{ opacity: 0, scale: 0.95 }}
+      variants={{
+        hidden: { opacity: 0, y: 24 },
+        show: { opacity: 1, y: 0,
+                transition: { duration: 0.6, ease: [0.21,0.47,0.32,0.98] }}
+      }}
+      className="flex flex-col gap-4 p-6 rounded-xl transition-all duration-300 hover:-translate-y-1"
+      style={{
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderTop: `2px solid ${project.accentColor}`,
+        borderRadius: '12px',
+      }}
+    >
+      {/* ROW 1: title + icon */}
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-white font-semibold text-base leading-snug">
+          {project.name}
+        </h3>
+        <div className="flex items-center gap-2 shrink-0">
+          {project.featured && (
+            <span className="px-2 py-0.5 text-[10px] font-semibold tracking-widest rounded text-cyan-400 border border-cyan-400/20 bg-cyan-400/5">
+              FEATURED
+            </span>
+          )}
+          <project.Icon size={18} style={{ color: project.accentColor, opacity: 0.8 }} />
+        </div>
+      </div>
+
+      {/* ROW 2: company */}
+      <div className="flex items-center gap-1.5 -mt-2">
+        <Building2 size={11} className="text-slate-600" />
+        <p className="text-xs text-slate-500">{project.company}</p>
+      </div>
+
+      {/* ROW 3: description */}
+      <p className="text-sm text-slate-400 leading-relaxed">{project.description}</p>
+
+      {/* ROW 4: tech tags — identical to Skills section tags */}
+      <div className="flex flex-wrap gap-2">
+        {project.tags.map((tag: string) => (
+          <span
+            key={tag}
+            className="px-2.5 py-1 text-xs font-mono text-slate-400 rounded-md"
+            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* ROW 5: GitHub + Demo links + Divider */}
+      <div className="mt-auto pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex gap-5">
+          <a href="#" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-200 transition-colors">
+            <Github size={13} /> GitHub
+          </a>
+          <a href="#" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-200 transition-colors">
+            <ExternalLink size={13} /> Demo
+          </a>
+        </div>
+      </div>
+    </motion.div>
+  )
 }

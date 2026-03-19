@@ -25,7 +25,7 @@ export function SkillCard({ skill }: { skill: SkillCategory }) {
       className={`group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[0_0_0_1px_rgba(37,99,235,0.06)] border-t-2 ${borderClass}`}
     >
       <div className="relative flex items-center justify-between gap-4">
-        <h3 className="font-heading text-lg tracking-tight text-[var(--text)]">
+        <h3 className="text-base font-semibold text-white">
           {skill.category}
         </h3>
         <span className="text-xl" aria-hidden="true">
@@ -37,7 +37,7 @@ export function SkillCard({ skill }: { skill: SkillCategory }) {
         {skill.items.map((i) => (
           <span
             key={i}
-            className="rounded-full border border-[var(--border)] bg-black/10 px-3 py-1 text-xs text-[var(--text-muted)] transition-colors group-hover:text-[var(--text)]"
+            className="rounded-full border border-[var(--border)] bg-black/10 px-3 py-1 text-xs font-mono text-slate-400 transition-colors group-hover:text-white"
           >
             {i}
           </span>
@@ -46,4 +46,3 @@ export function SkillCard({ skill }: { skill: SkillCategory }) {
     </motion.div>
   );
 }
-

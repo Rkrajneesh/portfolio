@@ -57,7 +57,7 @@ function StatCounter({ endValue, suffix, label }: StatCounterProps) {
       <motion.span className="text-4xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
         {rounded}
       </motion.span>
-      <span className="text-sm md:text-base text-[var(--text-muted)] mt-2 font-medium">{label}</span>
+      <span className="text-sm text-slate-400 mt-2 font-medium">{label}</span>
     </div>
   );
 }
@@ -153,21 +153,21 @@ export function Hero() {
 
           <motion.p
             initial="hidden" animate="visible" variants={slideInUp(0.4)}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--text-muted)]"
+            className="mt-6 max-w-xl text-sm text-slate-400 leading-relaxed"
           >
             I design and build scalable distributed backend systems using Java & Spring Boot — from real-time WebSocket messaging platforms to Spring Batch pipelines processing 50K–100K+ records. Passionate about clean architecture, microservices, and solving large-scale engineering problems.
           </motion.p>
 
           <motion.p
             initial="hidden" animate="visible" variants={slideInUp(0.45)}
-            className="mt-4 text-sm text-[var(--text-muted)]"
+            className="mt-4 text-sm text-slate-400"
           >
             Infinite Computer Solutions (2023–Present) <span className="text-cyan-400 mx-1">·</span> GigVistas (2022–2023)
           </motion.p>
 
           <motion.p
             initial="hidden" animate="visible" variants={slideInUp(0.45)}
-            className="mt-2 text-sm italic text-[var(--text-muted)]"
+            className="mt-2 text-sm italic text-slate-400"
           >
             Microservices <span className="text-cyan-400 mx-1">·</span> Event-Driven Architecture <span className="text-cyan-400 mx-1">·</span> AWS <span className="text-cyan-400 mx-1">·</span> Docker <span className="text-cyan-400 mx-1">·</span> JWT & RBAC Security
           </motion.p>
@@ -207,10 +207,10 @@ export function Hero() {
             initial="hidden" animate="visible" variants={slideInUp(0.6)}
             className="mt-10 w-full min-w-0"
           >
-            <p className="text-sm italic text-[var(--text-muted)] mb-3">
+            <p className="text-sm italic text-slate-400 mb-3">
               Worked on enterprise power sector systems <span className="text-cyan-400 mx-1">·</span> Real-time messaging <span className="text-cyan-400 mx-1">·</span> Payment gateway integrations <span className="text-cyan-400 mx-1">·</span> URL monitoring systems <span className="text-cyan-400 mx-1">·</span> Batch processing
             </p>
-            <p className="text-sm text-[var(--text-muted)] mb-3 font-medium uppercase tracking-wider">Core Technologies</p>
+            <p className="text-sm text-slate-400 mb-3 font-medium uppercase tracking-wider">Core Technologies</p>
             <div className={cn(
               "relative flex pb-2 w-full min-w-0",
               shouldReduceMotion ? "overflow-x-auto no-scrollbar" : "overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
@@ -225,7 +225,7 @@ export function Hero() {
                     <div className="flex items-center gap-2 px-4 py-2 bg-[var(--surface)]/50 border border-[var(--border)] rounded-full hover:bg-[var(--surface)] transition-colors">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={tech.icon} alt={`${tech.name} icon`} className="w-5 h-5" />
-                      <span className="text-sm font-medium text-[var(--text)]">{tech.name}</span>
+                      <span className="text-sm font-medium text-white">{tech.name}</span>
                     </div>
                   </div>
                 ))}
