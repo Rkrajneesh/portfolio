@@ -1,9 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Github, Linkedin, Mail, Phone, MapPin } from "lucide-react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,31 +17,31 @@ const fadeIn = {
 };
 
 export function Contact() {
-  async function onSubmit(formData: FormData) {
-    const payload = {
-      name: String(formData.get("name") ?? ""),
-      email: String(formData.get("email") ?? ""),
-      message: String(formData.get("message") ?? ""),
-    };
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' })
+  const [status, setStatus] = useState<'idle'|'loading'|'success'|'error'>('idle')
 
-    const t = toast.loading(copy.sections.contact.form.sendingToast);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = (await res.json().catch(() => null)) as { error?: string } | null;
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to send message");
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      if (res.ok) {
+        setStatus('success')
+        setFormData({ name: '', email: '', message: '' })
+      } else {
+        setStatus('error')
       }
-      toast.success(copy.sections.contact.form.successToast, { id: t });
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : copy.sections.contact.form.errorToast,
-        { id: t }
-      );
+    } catch {
+      setStatus('error')
     }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
   return (
@@ -116,9 +116,7 @@ export function Contact() {
           className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6"
         >
           <form
-            action={(fd) => {
-              void onSubmit(fd);
-            }}
+            onSubmit={handleSubmit}
             className="space-y-4"
           >
             <div className="grid gap-4 sm:grid-cols-2">
@@ -129,6 +127,8 @@ export function Contact() {
                 <Input
                   id="name"
                   name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                   placeholder={copy.sections.contact.form.namePlaceholder}
                   className="mt-2"
@@ -142,6 +142,8 @@ export function Contact() {
                   id="email"
                   name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                   placeholder={copy.sections.contact.form.emailPlaceholder}
                   className="mt-2"
@@ -155,16 +157,20 @@ export function Contact() {
               <Textarea
                 id="message"
                 name="message"
+                value={formData.message}
+                onChange={handleChange}
                 required
                 placeholder={copy.sections.contact.form.messagePlaceholder}
                 className="mt-2 min-h-[140px]"
               />
             </div>
             <div className="flex items-center justify-end">
-              <Button type="submit" size="lg">
-                {copy.sections.contact.form.sendLabel}
+              <Button type="submit" size="lg" disabled={status === 'loading'}>
+                {status === 'loading' ? 'Sending...' : copy.sections.contact.form.sendLabel}
               </Button>
             </div>
+            {status === 'success' && <p className="text-green-400 text-sm mt-2 text-right">✓ Message sent! I'll reply within 24 hours.</p>}
+            {status === 'error' && <p className="text-red-400 text-sm mt-2 text-right">Something went wrong. Please try again.</p>}
           </form>
         </motion.div>
       </div>

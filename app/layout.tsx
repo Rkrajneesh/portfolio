@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const softwareEngineerFont = JetBrains_Mono({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-software-engineer",
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: "--font-jakarta",
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: "Rajneesh Kumar — Backend Engineer",
-  description:
-    "Portfolio of Rajneesh Kumar, Backend Engineer",
+  description: "Backend Engineer specialising in Java, Spring Boot and distributed systems.",
 };
 
 export default function RootLayout({
@@ -19,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${softwareEngineerFont.variable} font-sans antialiased`}>
+    <html lang="en" className={`${plusJakartaSans.variable} dark`}>
+      <body className="font-sans antialiased">
         {children}
       </body>
     </html>

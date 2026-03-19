@@ -99,7 +99,7 @@ export function Projects() {
           <button
             key={f}
             onClick={() => setActiveFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm
+            className={`px-4 py-1.5 rounded-full text-sm font-medium
               border transition-all duration-200 flex items-center gap-2
               ${activeFilter === f
                 ? 'border-cyan-400/40 text-cyan-400 bg-cyan-400/8'
