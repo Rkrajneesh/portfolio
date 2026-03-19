@@ -1,82 +1,40 @@
-import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { z } from "zod";
-import { personalInfo } from "@/lib/data";
+import { Resend } from 'resend'
+import { NextRequest, NextResponse } from 'next/server'
 
-const ContactSchema = z.object({
-  name: z.string().min(2).max(80),
-  email: z.string().email().max(120),
-  message: z.string().min(10).max(4000),
-});
+const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const json = (await req.json().catch(() => null)) as unknown;
-    const parsed = ContactSchema.safeParse(json);
-    if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Invalid form input." },
-        { status: 400 }
-      );
+    const { name, email, message } = await req.json()
+
+    if (!name || !email || !message) {
+      return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
-    const host = process.env.SMTP_HOST;
-    const port = process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : undefined;
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
-    const to = process.env.CONTACT_TO || personalInfo.email;
-    const from = process.env.CONTACT_FROM || user || personalInfo.email;
-
-    if (!host || !port || !user || !pass) {
-      return NextResponse.json(
-        {
-          error:
-            "Email service is not configured. Please set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS.",
-        },
-        { status: 500 }
-      );
-    }
-
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
-    });
-
-    const { name, email, message } = parsed.data;
-
-    await transporter.sendMail({
-      to,
-      from,
-      replyTo: email,
-      subject: `Portfolio contact: ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
+    const { data, error } = await resend.emails.send({
+      from: 'Portfolio Contact <onboarding@resend.dev>',
+      to: 'rkrajneesh94@gmail.com',
+      subject: `New message from ${name} — Portfolio Contact`,
       html: `
-        <div style="font-family: ui-sans-serif, system-ui; line-height: 1.55">
-          <h2>New portfolio message</h2>
-          <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-          <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <div style="font-family: sans-serif; max-width: 600px;">
+          <h2 style="color: #38bdf8;">New Portfolio Message</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
           <p><strong>Message:</strong></p>
-          <pre style="white-space: pre-wrap; padding: 12px; background: #f5f5f5; border-radius: 10px">${escapeHtml(
-            message
-          )}</pre>
+          <p style="background:#f4f4f4; padding:12px; border-radius:8px;">${message}</p>
+          <p style="color:#888; font-size:12px;">Sent from your portfolio contact form</p>
         </div>
       `,
-    });
+    })
 
-    return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "Server error." }, { status: 500 });
+    if (error) {
+      console.error('Resend API Error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ success: true, message: 'Email sent!' }, { status: 200 })
+  } catch (error: any) {
+    console.error('Server Error:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
-
-function escapeHtml(input: string) {
-  return input
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
