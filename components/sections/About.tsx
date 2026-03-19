@@ -46,7 +46,7 @@ export function About() {
         >
           <div className="space-y-5">
             <p className="text-sm text-slate-400 leading-relaxed">
-              I'm a Backend Engineer with 4+ years of experience building distributed 
+              I&apos;m a Backend Engineer with 4+ years of experience building distributed 
               systems and microservices using Java and Spring Boot.
             </p>
             <p className="text-sm text-slate-400 leading-relaxed">
