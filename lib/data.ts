@@ -292,4 +292,3 @@ export const copy = {
     builtWith: "Built with Next.js, Tailwind CSS, and Framer Motion.",
   },
 } as const;
-
